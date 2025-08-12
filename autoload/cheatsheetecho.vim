@@ -14,7 +14,10 @@ export def CheatSheetEcho(filetype_only = v:false)
   echo join(list, "\n")
 enddef
 def GetSortedList(hint_dict: dict<list<string>>, list: list<string>): list<string>
-  var sortedlist: list<string>
+  var sortedlist = list
+  if &filetype !=# '_'
+    extend(sortedlist, ['', $'[{&filetype}]'])
+  endif
   var sorted_keys = keys(hint_dict)
   sort(sorted_keys)
   for k in sorted_keys
