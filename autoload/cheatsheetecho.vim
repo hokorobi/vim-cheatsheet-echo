@@ -1,7 +1,7 @@
 vim9script
 scriptencoding utf-8
 
-var tips = {}
+var tips: dict<dict<list<string>>> = {}
 
 export def CheatSheetEcho(filetype_only = v:false)
   var list: list<string>
@@ -34,9 +34,7 @@ export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_'
     tips[filetype][source] = addlist
   endif
 enddef
-export def CheatSheetEchoItems(): dict<any>
+
+export def CheatSheetEchoItems(): dict<dict<list<string>>>
   return tips
 enddef
-
-# NOTE: comment out on release
-# defcompile
