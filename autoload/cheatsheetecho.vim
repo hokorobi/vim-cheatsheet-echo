@@ -25,12 +25,8 @@ enddef
 
 # Avoid adding duplicate 'addlist' from the same 'source'
 export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_')
-  if has_key(tips, filetype)
-    if !has_key(tips[filetype], source)
-      tips[filetype][source] = addlist
-    endif
-  else
-    tips[filetype] = {}
+  tips[filetype] = get(tips, filetype, {})
+  if !has_key(tips[filetype], source)
     tips[filetype][source] = addlist
   endif
 enddef
