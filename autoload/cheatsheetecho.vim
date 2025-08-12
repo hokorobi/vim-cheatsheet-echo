@@ -4,24 +4,29 @@ scriptencoding utf-8
 var tips: dict<dict<list<string>>> = {}
 
 export def CheatSheetEcho(filetype_only = v:false)
-  var list: list<string>
+  var display_lines: list<string>
+
   if !filetype_only
-    list = GetSortedList(tips['_'], list)
+    display_lines = GetSortedHints(tips['_'], display_lines)
   endif
+
   if has_key(tips, &filetype)
-    list = GetSortedList(tips[&filetype], list)
+    display_lines = GetSortedHints(tips[&filetype], display_lines)
   endif
-  echo join(list, "\n")
+
+  if !empty(display_lines)
+    echo join(display_lines, "\n")
+  endif
 enddef
-def GetSortedList(hint_dict: dict<list<string>>, list: list<string>): list<string>
+def GetSortedHints(filetype_tips: dict<list<string>>, list: list<string>): list<string>
   var sortedlist = list
   if &filetype !=# '_'
     extend(sortedlist, ['', $'[{&filetype}]'])
   endif
-  var sorted_keys = keys(hint_dict)
+  var sorted_keys = keys(filetype_tips)
   sort(sorted_keys)
   for k in sorted_keys
-    extend(sortedlist, hint_dict[k])
+    extend(sortedlist, filetype_tips[k])
   endfor
   return sortedlist
 enddef
