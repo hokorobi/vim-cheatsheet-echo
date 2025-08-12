@@ -1,0 +1,45 @@
+*vim-cheatsheet-echo.txt* Vim plugin for echo useful cheatsheet
+
+==============================================================================
+CONTENTS                                            *cheatsheet-echo-contents*
+
+1. Introduction		|cheatsheet-echo-intro|
+2. Commands 		|cheatsheet-echo-commands|
+3. Functions		|cheatsheet-echo-functions|
+
+==============================================================================
+1. Introduction                                        *cheatsheet-echo-intro*
+
+A simple plugin to display custom cheatsheets in Vim. You can add your own
+tips for specific filetypes or for all filetypes.
+
+==============================================================================
+2. Commands                                         *cheatsheet-echo-commands*
+
+There are no direct commands provided by this plugin. Use the functions below.
+
+==============================================================================
+3. Functions                                       *cheatsheet-echo-functions*
+
+                                                           *:CheatSheetEcho()*
+CheatSheetEcho()
+    Displays all registered tips. If a filetype-specific tip exists, it
+    will be displayed along with the general tips.
+
+
+                                                        *:CheatSheetEchoAdd()*
+CheatSheetEchoAdd({addlist}, {filetype}, {source})
+    Adds a list of tips.
+    {addlist}   A List of strings to be added.
+    {filetype}  The filetype for which the tips apply. Use '_' for
+                general tips. (default: '_')
+    {source}    A unique key to identify the source of the tips.
+                (default: '_')
+
+                                                      *:CheatSheetEchoItems()*
+CheatSheetEchoItems()
+    Returns the internal dictionary of all tips.
+    Returns: a Dictionary of all tips.
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:
