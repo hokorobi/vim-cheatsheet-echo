@@ -5,22 +5,22 @@ var tips: dict<dict<list<string>>> = {}
 
 export def CheatSheetEcho(filetype_only = v:false)
   var list: list<string>
-  var sorted_keys: list<string>
   if !filetype_only
-    sorted_keys = keys(tips['_'])
-    sort(sorted_keys)
-    for k in sorted_keys
-      extend(list, tips['_'][k])
-    endfor
+    list = GetSortedList(tips['_'], list)
   endif
   if has_key(tips, &filetype)
-    sorted_keys = keys(tips[&filetype])
-    sort(sorted_keys)
-    for k in sorted_keys
-      extend(list, extend(['', $'[{&filetype}]'], tips[&filetype][k]))
-    endfor
+    list = GetSortedList(tips[&filetype], list)
   endif
   echo join(list, "\n")
+enddef
+def GetSortedList(hint_dict: dict<list<string>>, list: list<string>): list<string>
+  var sortedlist: list<string>
+  var sorted_keys = keys(hint_dict)
+  sort(sorted_keys)
+  for k in sorted_keys
+    extend(sortedlist, hint_dict[k])
+  endfor
+  return sortedlist
 enddef
 
 # Avoid adding duplicate 'addlist' from the same 'source'
