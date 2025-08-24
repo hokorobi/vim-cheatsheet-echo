@@ -92,5 +92,3 @@ enddef
 export def CheatSheetEchoItems(): dict<dict<list<string>>>
   return tips
 enddef
-
-defcompile
