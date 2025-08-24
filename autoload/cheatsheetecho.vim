@@ -10,24 +10,24 @@ export def CheatSheetEcho(filetype_only = v:false)
   var display_lines: list<string>
 
   if !filetype_only
-    display_lines = GetSortedTips(tips['_'], display_lines)
+    display_lines = GetSortedTips('_', display_lines)
   endif
 
   if has_key(tips, &filetype)
-    display_lines = GetSortedTips(tips[&filetype], display_lines)
+    display_lines = GetSortedTips(&filetype, display_lines)
   endif
 
   if !empty(display_lines)
     echo join(display_lines, "\n")
   endif
 enddef
-def GetSortedTips(filetype_tips: dict<list<string>>, list: list<string>): list<string>
+def GetSortedTips(filetype: string, list: list<string>): list<string>
   var sortedlist = list
-  if &filetype !=# '_'
-    extend(sortedlist, ['', $'[{&filetype}]'])
+  if filetype !=# '_'
+    extend(sortedlist, ['', $'[{filetype}]'])
   endif
-  for k in keys(filetype_tips)->sort()
-    extend(sortedlist, filetype_tips[k])
+  for k in keys(tips[filetype])->sort()
+    extend(sortedlist, tips[filetype][k])
   endfor
   return sortedlist
 enddef
