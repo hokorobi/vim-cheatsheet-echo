@@ -1,6 +1,9 @@
 vim9script
 scriptencoding utf-8
 
+# {filetype:
+#   {source: [tips1, tips2, ...]}
+# }
 var tips: dict<dict<list<string>>> = {}
 
 export def CheatSheetEcho(filetype_only = v:false)
