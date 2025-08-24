@@ -31,6 +31,8 @@ CheatSheetEcho()
 CheatSheetEchoAdd({addlist}, {filetype}, {source})
     Adds a list of tips.
     {addlist}   A List of strings to be added.
+                If the strings in `{addlist}` contain a tab (`\t`), they will
+                be automatically aligned upon display.
     {filetype}  The filetype for which the tips apply. Use '_' for
                 general tips. (default: '_')
     {source}    A unique key to identify the source of the tips.
