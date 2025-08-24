@@ -55,6 +55,9 @@ def TabAlign(a: list<string>): list<string>
     endif
     temp_list = add(temp_list, s)
   endfor
+  if !empty(temp_list)
+    extend(result, temp_list)
+  endif
 
   return result
 enddef
@@ -70,10 +73,9 @@ def TabAlignAlign(a: list<string>, max_len: number): list<string>
     var parts = split(s, '\t')
     var left_part = parts[0]
     var left_len = strlen(left_part)
-    var padding_needed = max_len - left_len
+    var padding_needed = max_len - left_len + 1
     var padding = repeat(' ', padding_needed)
     result = add(result, left_part .. padding .. parts[-1])
-    result = add(result, s)
   endfor
 
   return result
