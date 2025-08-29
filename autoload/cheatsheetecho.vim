@@ -25,10 +25,10 @@ enddef
 def GetSortedTips(filetype: string, list: list<string>): list<string>
   var sortedlist = list
   if filetype !=# '_'
-    extend(sortedlist, ['', $'[{filetype}]'])
+    sortedlist += ['', $'[{filetype}]']
   endif
   for k in keys(tips[filetype])->sort()
-    extend(sortedlist, tips[filetype][k])
+    sortedlist += tips[filetype][k]
   endfor
   return sortedlist
 enddef
@@ -45,15 +45,15 @@ def TabAlign(lines: list<string>): list<string>
       max_len = max([max_len, len])
     else
       if max_len != 0
-        extend(result, TabAlignGroup(group, max_len))
+        result += TabAlignGroup(group, max_len)
         group = []
         max_len = 0
       endif
     endif
-    group = add(group, line)
+    group += [line]
   endfor
   if !empty(group)
-    extend(result, group)
+    result += group
   endif
 
   return result
