@@ -51,7 +51,7 @@ def TabAlign(lines: list<string>): list<string>
     group += [line]
   endfor
   if !empty(group)
-    result += group
+    result += TabAlignGroup(group, max_len)
   endif
 
   return result
