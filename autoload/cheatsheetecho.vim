@@ -43,12 +43,10 @@ def TabAlign(lines: list<string>): list<string>
       var parts = split(line, '\t')
       var len = strlen(parts[0])
       max_len = max([max_len, len])
-    else
-      if max_len != 0
-        result += TabAlignGroup(group, max_len)
-        group = []
-        max_len = 0
-      endif
+    elseif max_len != 0
+      result += TabAlignGroup(group, max_len)
+      group = []
+      max_len = 0
     endif
     group += [line]
   endfor
