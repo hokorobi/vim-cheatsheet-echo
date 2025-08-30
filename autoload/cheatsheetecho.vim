@@ -19,8 +19,7 @@ export def CheatSheetEcho(filetype_only = v:false)
   endif
 
   if !empty(display_lines)
-    display_lines = TabAlign(display_lines)
-    echo join(display_lines, "\n")
+    echo join(TabAlign(display_lines), "\n")
   endif
 enddef
 def GetSortedTips(filetype: string, list: list<string>): list<string>
