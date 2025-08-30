@@ -25,11 +25,19 @@ export def CheatSheetEcho(filetype_only = v:false)
 enddef
 def GetSortedTips(filetype: string, list: list<string>): list<string>
   var sortedlist = list
+
+  # Display [filetype] except for _
   if filetype !=# '_'
     sortedlist += ['', $'[{filetype}]']
   endif
-  for k in keys(tips[filetype])->sort()
-    sortedlist += tips[filetype][k]
+  # _ is displayed at the beginning.
+  if has_key(tips[filetype], '_')
+    sortedlist += tips[filetype]['_']
+    remove(tips[filetype], '_')
+  endif
+  for source in keys(tips[filetype])->sort()
+    sortedlist += ['', $'[{source}]']
+    sortedlist += tips[filetype][source]
   endfor
   return sortedlist
 enddef
@@ -38,7 +46,7 @@ def TabAlign(lines: list<string>): list<string>
   var group: list<string> = []
   var result: list<string> = []
 
-  # <tab>の左側の最大バイト数を調査
+  # Investigate max bytes to the left of tab
   for line in lines
     if line =~ '\t'
       var parts = split(line, '\t')
