@@ -7,6 +7,7 @@ scriptencoding utf-8
 # tips: title	description
 var tips: dict<dict<list<string>>> = {}
 
+#--- Public Functions ---#
 export def CheatSheetEcho(filetype_only = v:false)
   var display_lines: list<string>
 
@@ -22,6 +23,20 @@ export def CheatSheetEcho(filetype_only = v:false)
     echo join(TabAlign(display_lines), "\n")
   endif
 enddef
+
+# Avoid adding duplicate 'addlist' from the same 'source'
+export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_')
+  tips[filetype] = get(tips, filetype, {})
+  if !has_key(tips[filetype], source)
+    tips[filetype][source] = addlist
+  endif
+enddef
+
+export def CheatSheetEchoItems(): dict<dict<list<string>>>
+  return tips
+enddef
+
+#--- Private Functions ---#
 def GetSortedTips(filetype: string, list: list<string>): list<string>
   var sortedlist = list
 
@@ -40,6 +55,7 @@ def GetSortedTips(filetype: string, list: list<string>): list<string>
   endfor
   return sortedlist
 enddef
+
 def TabAlign(lines: list<string>): list<string>
   var max_len = 0
   var group: list<string> = []
@@ -83,14 +99,3 @@ def TabAlignGroup(group: list<string>, max_len: number): list<string>
   return result
 enddef
 
-# Avoid adding duplicate 'addlist' from the same 'source'
-export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_')
-  tips[filetype] = get(tips, filetype, {})
-  if !has_key(tips[filetype], source)
-    tips[filetype][source] = addlist
-  endif
-enddef
-
-export def CheatSheetEchoItems(): dict<dict<list<string>>>
-  return tips
-enddef
