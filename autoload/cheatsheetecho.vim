@@ -68,8 +68,7 @@ def TabAlignGroup(group: list<string>, max_len: number): list<string>
 
     var parts = split(line, '\t')
     var left_part = parts[0]
-    # TODO タブが複数ある場合どうするかな？
-    var right_part = parts[-1]
+    var right_part = join(parts[1 : ], "\t")
     var padding = max_len - strlen(left_part) + 1
     result += [$'{left_part}{repeat(' ', padding)}{right_part}']
   endfor
