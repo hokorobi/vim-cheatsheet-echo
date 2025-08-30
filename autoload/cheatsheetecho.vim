@@ -4,6 +4,7 @@ scriptencoding utf-8
 # {filetype:
 #   {source: [tips1, tips2, ...]}
 # }
+# tips: title	description
 var tips: dict<dict<list<string>>> = {}
 
 export def CheatSheetEcho(filetype_only = v:false)
@@ -67,6 +68,7 @@ def TabAlignGroup(group: list<string>, max_len: number): list<string>
 
     var parts = split(line, '\t')
     var left_part = parts[0]
+    # TODO タブが複数ある場合どうするかな？
     var right_part = parts[-1]
     var padding = max_len - strlen(left_part) + 1
     result += [$'{left_part}{repeat(' ', padding)}{right_part}']
