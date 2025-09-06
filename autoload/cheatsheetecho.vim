@@ -116,6 +116,9 @@ def GetSortedTips2(filetype: string, list: list<string>): list<string>
   # _ is displayed at the beginning.
   for filetypeTips in tips2[filetype]
     if filetypeTips.source == '_'
+      if filetypeTips.category != '_'
+        sortedlist += ['', $'[{filetypeTips.category}]']
+      endif
       sortedlist += filetypeTips.tips
     else
       # dict<list<string>> に追加 filetypeTips.tips 追加
