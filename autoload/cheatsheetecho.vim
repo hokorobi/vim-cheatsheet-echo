@@ -15,7 +15,7 @@ scriptencoding utf-8
 #   ]
 # }
 # tips: title	description
-var tips: dict<list<dict<any>>> = {}
+var tips: dict<list<any>> = {}
 
 #--- Public Functions ---#
 export def CheatSheetEcho(filetype_only = v:false)
@@ -35,7 +35,7 @@ export def CheatSheetEcho(filetype_only = v:false)
 enddef
 
 # Avoid adding duplicate 'addlist' from the same 'source'
-export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_', category = '_')
+export def CheatSheetEchoAdd(addlist: list<string>, filetype: string = '_', source: string = '_', category: string = '_')
   tips[filetype] = get(tips, filetype, [])
   # tips[filetype] に tips[filetype][source] == source, tips[filetype][category] == category があれば上書き
   for filetypeTips in tips[filetype]
@@ -45,14 +45,8 @@ export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_'
     endif
   endfor
 
-  var cate: string
-  if category == '_'
-    cate = source
-  else
-    cate = category
-  endif
-
-  tips[filetype] += [{tips: addlist, source: source, category: cate}]
+  var resolved_category = (category == '_') ? source : category
+  tips[filetype] += [{tips: addlist, source: source, category: resolved_category}]
 enddef
 
 export def CheatSheetEchoItems(): dict<list<dict<any>>>
@@ -62,8 +56,6 @@ enddef
 #--- Private Functions ---#
 def GetSortedTips(filetype: string, list: list<string>): list<string>
   var sortedlist = list
-  var sourceDict: dict<list<string>> = {}
-  var leftTipsList: list<dict<any>> = []
   var categoryFirstList = list<string>
   var categoryDict: dict<list<string>> = {}
 
