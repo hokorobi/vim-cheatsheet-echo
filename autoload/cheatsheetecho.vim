@@ -54,27 +54,28 @@ export def CheatSheetEchoItems(): dict<list<dict<any>>>
 enddef
 
 #--- Private Functions ---#
-def GetSortedTips(filetype: string, list: list<string>): list<string>
-  var sortedLines = list
-  var categoryFirstList = list<string>
-  var categoryDict: dict<list<string>> = {}
+def GetSortedTips(filetype: string, currentLines: list<string>): list<string>
+  var sortedLines = currentLines
 
   # Display [filetype] except for _
   if filetype !=# '_'
     sortedLines += ['', $'[{filetype}]']
   endif
+
+  var categoryFirstLines: list<string> = []
+  var categoryDict: dict<list<string>> = {}
   for filetypeTips in tips[filetype]
     # _ is displayed at the beginning.
     if filetypeTips.category == '_' && filetypeTips.source == '_'
-      categoryFirstList += filetypeTips.tips
+      categoryFirstLines += filetypeTips.tips
     elseif filetypeTips.category == '_'
-      categoryFirstList += filetypeTips.tips
+      categoryFirstLines += filetypeTips.tips
     else
       categoryDict[filetypeTips.category] = get(categoryDict, filetypeTips.category, [])
       categoryDict[filetypeTips.category] += filetypeTips.tips
     endif
   endfor
-  sortedLines += categoryFirstList
+  sortedLines += categoryFirstLines
   for category in keys(categoryDict)->sort()
     sortedLines += ['', $'[{category}]']
     sortedLines += categoryDict[category]
