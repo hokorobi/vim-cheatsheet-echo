@@ -113,8 +113,8 @@ def GetSortedTips2(filetype: string, list: list<string>): list<string>
   if filetype !=# '_'
     sortedlist += ['', $'[{filetype}]']
   endif
-  # _ is displayed at the beginning.
   for filetypeTips in tips2[filetype]
+    # _ is displayed at the beginning.
     if filetypeTips.source == '_'
       if filetypeTips.category != '_'
         sortedlist += ['', $'[{filetypeTips.category}]']
@@ -127,7 +127,7 @@ def GetSortedTips2(filetype: string, list: list<string>): list<string>
   endfor
   for source in keys(sourceDict)->sort()
     sortedlist += ['', $'[{source}]']
-    sortedlist += sourceDict.source
+    sortedlist += sourceDict[source]
   endfor
 
   return sortedlist
