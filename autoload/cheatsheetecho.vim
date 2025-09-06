@@ -85,9 +85,9 @@ def GetSortedTips(filetype: string, currentLines: list<string>): list<string>
 enddef
 
 def TabAlign(lines: list<string>): list<string>
+  var result: list<string> = []
   var max_len = 0
   var group: list<string> = []
-  var result: list<string> = []
 
   # Investigate max bytes to the left of tab
   for line in lines
