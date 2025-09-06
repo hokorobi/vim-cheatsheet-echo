@@ -1,19 +1,17 @@
 vim9script
 scriptencoding utf-8
 
-# {filetype:
-#   [
-#     {tips: [tips1, tips2, ...],
-#      source: hoge,
-#      category: piyo,
-#     },
-#     {tips: [tips1, tips2, ...],
-#      source: hoge,
-#      category: piyo,
-#     },
-#     ...
-#   ]
-# }
+# {filetype: [
+#    {tips: [tips1, tips2, ...],
+#     source: hoge,
+#     category: piyo,
+#    },
+#    {tips: [tips1, tips2, ...],
+#     source: hoge,
+#     category: piyo,
+#    },
+#    ...
+#  ]}
 # tips: title	description
 var tips: dict<list<any>> = {}
 
