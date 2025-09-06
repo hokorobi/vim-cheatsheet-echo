@@ -75,7 +75,9 @@ def GetSortedTips(filetype: string, currentLines: list<string>): list<string>
   endfor
   sortedLines += categoryFirstLines
   for category in keys(categoryDict)->sort()
-    sortedLines += ['', $'[{category}]']
+    if filetype != category
+      sortedLines += ['', $'[{category}]']
+    endif
     sortedLines += categoryDict[category]
   endfor
 
