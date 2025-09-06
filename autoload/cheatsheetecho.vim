@@ -55,13 +55,13 @@ enddef
 
 #--- Private Functions ---#
 def GetSortedTips(filetype: string, list: list<string>): list<string>
-  var sortedlist = list
+  var sortedLines = list
   var categoryFirstList = list<string>
   var categoryDict: dict<list<string>> = {}
 
   # Display [filetype] except for _
   if filetype !=# '_'
-    sortedlist += ['', $'[{filetype}]']
+    sortedLines += ['', $'[{filetype}]']
   endif
   for filetypeTips in tips[filetype]
     # _ is displayed at the beginning.
@@ -74,13 +74,13 @@ def GetSortedTips(filetype: string, list: list<string>): list<string>
       categoryDict[filetypeTips.category] += filetypeTips.tips
     endif
   endfor
-  sortedlist += categoryFirstList
+  sortedLines += categoryFirstList
   for category in keys(categoryDict)->sort()
-    sortedlist += ['', $'[{category}]']
-    sortedlist += categoryDict[category]
+    sortedLines += ['', $'[{category}]']
+    sortedLines += categoryDict[category]
   endfor
 
-  return sortedlist
+  return sortedLines
 enddef
 
 def TabAlign(lines: list<string>): list<string>
