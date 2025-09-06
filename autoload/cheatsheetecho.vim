@@ -7,6 +7,23 @@ scriptencoding utf-8
 # tips: title	description
 var tips: dict<dict<list<string>>> = {}
 
+# {filetype:
+#   [
+#     {tips: [tips1, tips2, ...],
+#      source: hoge,
+#      category: piyo,
+#     },
+#     {tips: [tips1, tips2, ...],
+#      source: hoge,
+#      category: piyo,
+#     },
+#     ...
+#   ]
+# }
+# tips: title	description
+var tips2: dict<list<dict<any>>> = {}
+
+
 #--- Public Functions ---#
 export def CheatSheetEcho(filetype_only = v:false)
   var display_lines: list<string>
@@ -24,6 +41,22 @@ export def CheatSheetEcho(filetype_only = v:false)
   endif
 enddef
 
+export def CheatSheetEcho2(filetype_only = v:false)
+  var display_lines: list<string>
+
+  if !filetype_only
+    display_lines = GetSortedTips2('_', display_lines)
+  endif
+
+  if has_key(tips, &filetype)
+    display_lines = GetSortedTips2(&filetype, display_lines)
+  endif
+
+  if !empty(display_lines)
+    echo join(TabAlign(display_lines), "\n")
+  endif
+enddef
+
 # Avoid adding duplicate 'addlist' from the same 'source'
 export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_')
   tips[filetype] = get(tips, filetype, {})
@@ -32,8 +65,24 @@ export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_'
   endif
 enddef
 
+export def CheatSheetEchoAdd2(addlist: list<string>, filetype = '_', source = '_', category = '_')
+  tips2[filetype] = get(tips2, filetype, [])
+  # tips[filetype] に tips[filetype][source] == source, tips[filetype][category] == category があれば上書き
+  for filetypeTips in tips2[filetype]
+    if filetypeTips.source == source && filetypeTips.category == category
+      # already added
+      return
+    endif
+  endfor
+  tips2[filetype] += [{tips: addlist, source: source, category: category}]
+enddef
+
 export def CheatSheetEchoItems(): dict<dict<list<string>>>
   return tips
+enddef
+
+export def CheatSheetEchoItems2(): dict<list<dict<any>>>
+  return tips2
 enddef
 
 #--- Private Functions ---#
@@ -53,6 +102,31 @@ def GetSortedTips(filetype: string, list: list<string>): list<string>
     sortedlist += ['', $'[{source}]']
     sortedlist += tips[filetype][source]
   endfor
+  return sortedlist
+enddef
+
+def GetSortedTips2(filetype: string, list: list<string>): list<string>
+  var sortedlist = list
+  var sourceDict: dict<list<string>> = {}
+
+  # Display [filetype] except for _
+  if filetype !=# '_'
+    sortedlist += ['', $'[{filetype}]']
+  endif
+  # _ is displayed at the beginning.
+  for filetypeTips in tips2[filetype]
+    if filetypeTips.source == '_'
+      sortedlist += filetypeTips.tips
+    else
+      # dict<list<string>> に追加 filetypeTips.tips 追加
+      sourceDict[filetypeTips.source] = filetypeTips.tips
+    endif
+  endfor
+  for source in keys(sourceDict)->sort()
+    sortedlist += ['', $'[{source}]']
+    sortedlist += sourceDict.source
+  endfor
+
   return sortedlist
 enddef
 
