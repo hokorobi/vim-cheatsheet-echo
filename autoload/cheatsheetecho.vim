@@ -74,7 +74,15 @@ export def CheatSheetEchoAdd2(addlist: list<string>, filetype = '_', source = '_
       return
     endif
   endfor
-  tips2[filetype] += [{tips: addlist, source: source, category: category}]
+
+  var cate: string
+  if category == '_'
+    cate = source
+  else
+    cate = category
+  endif
+
+  tips2[filetype] += [{tips: addlist, source: source, category: cate}]
 enddef
 
 export def CheatSheetEchoItems(): dict<dict<list<string>>>
@@ -108,6 +116,9 @@ enddef
 def GetSortedTips2(filetype: string, list: list<string>): list<string>
   var sortedlist = list
   var sourceDict: dict<list<string>> = {}
+  var leftTipsList: list<dict<any>> = []
+  var categoryFirstList = list<string>
+  var categoryDict: dict<list<string>> = {}
 
   # Display [filetype] except for _
   if filetype !=# '_'
@@ -115,19 +126,19 @@ def GetSortedTips2(filetype: string, list: list<string>): list<string>
   endif
   for filetypeTips in tips2[filetype]
     # _ is displayed at the beginning.
-    if filetypeTips.source == '_'
-      if filetypeTips.category != '_'
-        sortedlist += ['', $'[{filetypeTips.category}]']
-      endif
-      sortedlist += filetypeTips.tips
+    if filetypeTips.category == '_' && filetypeTips.source == '_'
+      categoryFirstList += filetypeTips.tips
+    elseif filetypeTips.category == '_'
+      categoryFirstList += filetypeTips.tips
     else
-      # dict<list<string>> に追加 filetypeTips.tips 追加
-      sourceDict[filetypeTips.source] = filetypeTips.tips
+      categoryDict[filetypeTips.category] = get(categoryDict, filetypeTips.category, [])
+      categoryDict[filetypeTips.category] += filetypeTips.tips
     endif
   endfor
-  for source in keys(sourceDict)->sort()
-    sortedlist += ['', $'[{source}]']
-    sortedlist += sourceDict[source]
+  sortedlist += categoryFirstList
+  for category in keys(categoryDict)->sort()
+    sortedlist += ['', $'[{category}]']
+    sortedlist += categoryDict[category]
   endfor
 
   return sortedlist
