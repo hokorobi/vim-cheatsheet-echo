@@ -2,12 +2,6 @@ vim9script
 scriptencoding utf-8
 
 # {filetype:
-#   {source: [tips1, tips2, ...]}
-# }
-# tips: title	description
-var tips: dict<dict<list<string>>> = {}
-
-# {filetype:
 #   [
 #     {tips: [tips1, tips2, ...],
 #      source: hoge,
@@ -21,8 +15,7 @@ var tips: dict<dict<list<string>>> = {}
 #   ]
 # }
 # tips: title	description
-var tips2: dict<list<dict<any>>> = {}
-
+var tips: dict<list<dict<any>>> = {}
 
 #--- Public Functions ---#
 export def CheatSheetEcho(filetype_only = v:false)
@@ -41,34 +34,11 @@ export def CheatSheetEcho(filetype_only = v:false)
   endif
 enddef
 
-export def CheatSheetEcho2(filetype_only = v:false)
-  var display_lines: list<string>
-
-  if !filetype_only
-    display_lines = GetSortedTips2('_', display_lines)
-  endif
-
-  if has_key(tips, &filetype)
-    display_lines = GetSortedTips2(&filetype, display_lines)
-  endif
-
-  if !empty(display_lines)
-    echo join(TabAlign(display_lines), "\n")
-  endif
-enddef
-
 # Avoid adding duplicate 'addlist' from the same 'source'
-export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_')
-  tips[filetype] = get(tips, filetype, {})
-  if !has_key(tips[filetype], source)
-    tips[filetype][source] = addlist
-  endif
-enddef
-
-export def CheatSheetEchoAdd2(addlist: list<string>, filetype = '_', source = '_', category = '_')
-  tips2[filetype] = get(tips2, filetype, [])
+export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_', category = '_')
+  tips[filetype] = get(tips, filetype, [])
   # tips[filetype] に tips[filetype][source] == source, tips[filetype][category] == category があれば上書き
-  for filetypeTips in tips2[filetype]
+  for filetypeTips in tips[filetype]
     if filetypeTips.source == source && filetypeTips.category == category
       # already added
       return
@@ -82,38 +52,15 @@ export def CheatSheetEchoAdd2(addlist: list<string>, filetype = '_', source = '_
     cate = category
   endif
 
-  tips2[filetype] += [{tips: addlist, source: source, category: cate}]
+  tips[filetype] += [{tips: addlist, source: source, category: cate}]
 enddef
 
-export def CheatSheetEchoItems(): dict<dict<list<string>>>
+export def CheatSheetEchoItems(): dict<list<dict<any>>>
   return tips
-enddef
-
-export def CheatSheetEchoItems2(): dict<list<dict<any>>>
-  return tips2
 enddef
 
 #--- Private Functions ---#
 def GetSortedTips(filetype: string, list: list<string>): list<string>
-  var sortedlist = list
-
-  # Display [filetype] except for _
-  if filetype !=# '_'
-    sortedlist += ['', $'[{filetype}]']
-  endif
-  # _ is displayed at the beginning.
-  if has_key(tips[filetype], '_')
-    sortedlist += tips[filetype]['_']
-    remove(tips[filetype], '_')
-  endif
-  for source in keys(tips[filetype])->sort()
-    sortedlist += ['', $'[{source}]']
-    sortedlist += tips[filetype][source]
-  endfor
-  return sortedlist
-enddef
-
-def GetSortedTips2(filetype: string, list: list<string>): list<string>
   var sortedlist = list
   var sourceDict: dict<list<string>> = {}
   var leftTipsList: list<dict<any>> = []
@@ -124,7 +71,7 @@ def GetSortedTips2(filetype: string, list: list<string>): list<string>
   if filetype !=# '_'
     sortedlist += ['', $'[{filetype}]']
   endif
-  for filetypeTips in tips2[filetype]
+  for filetypeTips in tips[filetype]
     # _ is displayed at the beginning.
     if filetypeTips.category == '_' && filetypeTips.source == '_'
       categoryFirstList += filetypeTips.tips
