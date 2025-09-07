@@ -47,7 +47,7 @@ export def CheatSheetEchoAdd(addlist: list<string>, filetype: string = '_', sour
   tips[filetype] += [{tips: addlist, source: source, category: resolved_category}]
 enddef
 
-export def CheatSheetEchoItems(): dict<list<dict<any>>>
+export def CheatSheetEchoItems(): dict<list<any>>
   return tips
 enddef
 
