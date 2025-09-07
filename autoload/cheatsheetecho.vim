@@ -60,20 +60,20 @@ def GetSortedTips(filetype: string, currentLines: list<string>): list<string>
     sortedLines += ['', $'[{filetype}]']
   endif
 
-  var categoryFirstLines: list<string> = []
+  var priorityLines: list<string> = []
   var categoryDict: dict<list<string>> = {}
   for filetypeTips in tips[filetype]
     # _ is displayed at the beginning.
     if filetypeTips.category == '_' && filetypeTips.source == '_'
-      categoryFirstLines += filetypeTips.tips
+      priorityLines += filetypeTips.tips
     elseif filetypeTips.category == '_'
-      categoryFirstLines += filetypeTips.tips
+      priorityLines += filetypeTips.tips
     else
       categoryDict[filetypeTips.category] = get(categoryDict, filetypeTips.category, [])
       categoryDict[filetypeTips.category] += filetypeTips.tips
     endif
   endfor
-  sortedLines += categoryFirstLines
+  sortedLines += priorityLines
   for category in keys(categoryDict)->sort()
     if filetype != category
       sortedLines += ['', $'[{category}]']
