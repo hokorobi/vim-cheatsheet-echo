@@ -35,15 +35,15 @@ enddef
 # Avoid adding duplicate 'addlist' from the same 'source'
 export def CheatSheetEchoAdd(addlist: list<string>, filetype: string = '_', source: string = '_', category: string = '_')
   tips[filetype] = get(tips, filetype, [])
-  # tips[filetype] に tips[filetype][source] == source, tips[filetype][category] == category があれば上書き
+  # tips[filetype] に tips[filetype][source] == source, tips[filetype][category] == category があればスキップ
+  var resolved_category = (category == '_') ? source : category
   for filetypeTips in tips[filetype]
-    if filetypeTips.source == source && filetypeTips.category == category
+    if filetypeTips.source == source && filetypeTips.category == resolved_category
       # already added
       return
     endif
   endfor
 
-  var resolved_category = (category == '_') ? source : category
   tips[filetype] += [{tips: addlist, source: source, category: resolved_category}]
 enddef
 
