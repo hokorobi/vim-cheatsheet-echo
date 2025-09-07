@@ -23,19 +23,21 @@ There are no direct commands provided by this plugin. Use the functions below.
 
                                                            *:CheatSheetEcho()*
 CheatSheetEcho()
-    Displays all registered tips. If a filetype-specific tip exists, it
-    will be displayed along with the general tips.
+    Displays all registered tips. If a filetype-specific tip exists, it will
+    be displayed along with the general tips.
 
 
                                                         *:CheatSheetEchoAdd()*
-CheatSheetEchoAdd({addlist}, {filetype}, {source})
+CheatSheetEchoAdd({addlist}, {filetype}, {source}, {category})
     Adds a list of tips.
     {addlist}   A List of strings to be added.
                 If the strings in `{addlist}` contain a tab (`\t`), they will
                 be automatically aligned upon display.
-    {filetype}  The filetype for which the tips apply. Use '_' for
-                general tips. (default: '_')
+    {filetype}  The filetype for which the tips apply. Use '_' for general
+                tips. (default: '_')
     {source}    A unique key to identify the source of the tips.
+                (default: '_')
+    {category}  A unique key to identify the category of the tips.
                 (default: '_')
 
                                                       *:CheatSheetEchoItems()*
