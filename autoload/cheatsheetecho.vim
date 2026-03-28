@@ -15,18 +15,9 @@ var tips_data: dict<list<dict<any>>> = {}
 
 #--- Public Functions ---#
 export def CheatSheetEcho(filetype_only = false)
-  var display_lines: list<string>
-
-  if !filetype_only
-    display_lines = GetSortedTips('_', display_lines)
-  endif
-
-  if has_key(tips_data, &filetype)
-    display_lines = GetSortedTips(&filetype, display_lines)
-  endif
-
-  if !empty(display_lines)
-    echo join(TabAlign(display_lines), "\n")
+  var lines = GetCheatSheetEchoList(filetype_only)
+  if !empty(lines)
+    echo join(TabAlign(lines), "\n")
   endif
 enddef
 
@@ -49,13 +40,15 @@ export def CheatSheetEchoItems(): dict<list<dict<any>>>
 enddef
 
 export def GetCheatSheetEchoList(filetype_only = false): list<string>
-  var display_lines: list<string>
+  var display_lines: list<string> = []
 
-  if !filetype_only
+  # 全体用(_)の取得
+  if !filetype_only && has_key(tips_data, '_')
     display_lines = GetSortedTips('_', display_lines)
   endif
 
-  if has_key(tips_data, &filetype)
+  # カレントバッファのfiletype用を取得
+  if !empty(&filetype) && has_key(tips_data, &filetype)
     display_lines = GetSortedTips(&filetype, display_lines)
   endif
 
