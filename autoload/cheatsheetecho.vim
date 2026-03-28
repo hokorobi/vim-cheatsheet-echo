@@ -36,7 +36,8 @@ enddef
 export def CheatSheetEchoAdd(addlist: list<string>, filetype: string = '_', source: string = '_', category: string = '_')
   tips[filetype] = get(tips, filetype, [])
   # tips[filetype] に tips[filetype][source] == source, tips[filetype][category] == category があればスキップ
-  var resolved_category = (category == '_') ? source : category
+  # var resolved_category = (category == '_') ? source : category
+  var resolved_category = category
   for filetypeTips in tips[filetype]
     if filetypeTips.source == source && filetypeTips.category == resolved_category
       # already added
