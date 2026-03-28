@@ -31,19 +31,17 @@ export def CheatSheetEcho(filetype_only = false)
 enddef
 
 # Avoid adding duplicate 'addlist' from the same 'source'
-export def CheatSheetEchoAdd(addlist: list<string>, filetype: string = '_', source: string = '_', category: string = '_')
+export def CheatSheetEchoAdd(addlist: list<string>, filetype = '_', source = '_', category = '_')
   tips_data[filetype] = get(tips_data, filetype, [])
-  # tips_data[filetype] に tips_data[filetype][source] == source, tips_data[filetype][category] == category があればスキップ
-  # var resolved_category = (category == '_') ? source : category
-  var resolved_category = category
-  for filetypeTips in tips_data[filetype]
-    if filetypeTips.source == source && filetypeTips.category == resolved_category
-      # already added
+
+  # 既に同じsourceとcategoryが存在するかチェック
+  for item in tips_data[filetype]
+    if item.source == source && item.category == category
       return
     endif
   endfor
 
-  tips_data[filetype] += [{tips: addlist, source: source, category: resolved_category}]
+  tips_data[filetype]->add({tips: addlist, source: source, category: category})
 enddef
 
 export def CheatSheetEchoItems(): dict<list<dict<any>>>
