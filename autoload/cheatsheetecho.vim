@@ -1,29 +1,27 @@
 vim9script
 scriptencoding utf-8
 
-# {filetype: [
-#    {tips: [tips1, tips2, ...],
-#     source: hoge,
-#     category: piyo,
-#    },
-#    {tips: [tips1, tips2, ...],
-#     source: hoge,
-#     category: piyo,
-#    },
-#    ...
-#  ]}
-# tips: title	description
-var tips: dict<list<any>> = {}
+# データ構造の定義
+# tips_data = {
+#   filetype: [
+#     {tips: ['title\tdesc', 'title\tdesc', ...],
+#      source: 'str',
+#      category: 'str',
+#     },
+#     ...
+#   ]
+# }
+var tips_data: dict<list<dict<any>>> = {}
 
 #--- Public Functions ---#
-export def CheatSheetEcho(filetype_only = v:false)
+export def CheatSheetEcho(filetype_only = false)
   var display_lines: list<string>
 
   if !filetype_only
     display_lines = GetSortedTips('_', display_lines)
   endif
 
-  if has_key(tips, &filetype)
+  if has_key(tips_data, &filetype)
     display_lines = GetSortedTips(&filetype, display_lines)
   endif
 
@@ -34,32 +32,32 @@ enddef
 
 # Avoid adding duplicate 'addlist' from the same 'source'
 export def CheatSheetEchoAdd(addlist: list<string>, filetype: string = '_', source: string = '_', category: string = '_')
-  tips[filetype] = get(tips, filetype, [])
-  # tips[filetype] に tips[filetype][source] == source, tips[filetype][category] == category があればスキップ
+  tips_data[filetype] = get(tips_data, filetype, [])
+  # tips_data[filetype] に tips_data[filetype][source] == source, tips_data[filetype][category] == category があればスキップ
   # var resolved_category = (category == '_') ? source : category
   var resolved_category = category
-  for filetypeTips in tips[filetype]
+  for filetypeTips in tips_data[filetype]
     if filetypeTips.source == source && filetypeTips.category == resolved_category
       # already added
       return
     endif
   endfor
 
-  tips[filetype] += [{tips: addlist, source: source, category: resolved_category}]
+  tips_data[filetype] += [{tips: addlist, source: source, category: resolved_category}]
 enddef
 
-export def CheatSheetEchoItems(): dict<list<any>>
-  return tips
+export def CheatSheetEchoItems(): dict<list<dict<any>>>
+  return tips_data
 enddef
 
-export def GetCheatSheetEchoList(filetype_only = v:false): list<string>
+export def GetCheatSheetEchoList(filetype_only = false): list<string>
   var display_lines: list<string>
 
   if !filetype_only
     display_lines = GetSortedTips('_', display_lines)
   endif
 
-  if has_key(tips, &filetype)
+  if has_key(tips_data, &filetype)
     display_lines = GetSortedTips(&filetype, display_lines)
   endif
 
@@ -77,7 +75,7 @@ def GetSortedTips(filetype: string, currentLines: list<string>): list<string>
 
   var priorityLines: list<string> = []
   var categoryDict: dict<list<string>> = {}
-  for filetypeTips in tips[filetype]
+  for filetypeTips in tips_data[filetype]
     # _ is displayed at the beginning.
     if filetypeTips.category == '_' && filetypeTips.source == '_'
       priorityLines += filetypeTips.tips
@@ -108,37 +106,27 @@ def TabAlign(lines: list<string>): list<string>
   for line in lines
     if line =~ '\t'
       var parts = split(line, '\t')
-      var len = strlen(parts[0])
-      max_len = max([max_len, len])
+      max_len = max([max_len, strdisplaywidth(parts[0])])
     elseif max_len != 0
-      result += TabAlignGroup(group, max_len)
+      result += AlignGroup(group, max_len)
       group = []
       max_len = 0
     endif
     group += [line]
   endfor
   if !empty(group)
-    result += TabAlignGroup(group, max_len)
+    result += AlignGroup(group, max_len)
   endif
 
   return result
 enddef
-def TabAlignGroup(group: list<string>, max_len: number): list<string>
-  var result: list<string> = []
-
-  for line in group
-    if line !~ '\t'
-      result = add(result, line)
-      continue
-    endif
-
-    var parts = split(line, '\t')
-    var left_part = parts[0]
-    var right_part = join(parts[1 : ], "\t")
-    var padding = max_len - strlen(left_part) + 1
-    result += [$'{left_part}{repeat(' ', padding)}{right_part}']
-  endfor
-
-  return result
+# グループ内のテキストを整形する
+def AlignGroup(group: list<string>, max_len: number): list<string>
+    return group->mapnew((_, line) => {
+        if line !~ "\t" | return line | endif
+        var parts = split(line, "\t")
+        var padding = max_len - strdisplaywidth(parts[0]) + 2
+        return $'{parts[0]}{repeat(" ", padding)}{join(parts[1 : ], "\t")}'
+    })
 enddef
 
