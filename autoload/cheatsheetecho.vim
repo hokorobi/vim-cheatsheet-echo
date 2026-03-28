@@ -52,6 +52,20 @@ export def CheatSheetEchoItems(): dict<list<any>>
   return tips
 enddef
 
+export def GetCheatSheetEchoList(filetype_only = v:false): list<string>
+  var display_lines: list<string>
+
+  if !filetype_only
+    display_lines = GetSortedTips('_', display_lines)
+  endif
+
+  if has_key(tips, &filetype)
+    display_lines = GetSortedTips(&filetype, display_lines)
+  endif
+
+  return display_lines
+enddef
+
 #--- Private Functions ---#
 def GetSortedTips(filetype: string, currentLines: list<string>): list<string>
   var sortedLines = currentLines
