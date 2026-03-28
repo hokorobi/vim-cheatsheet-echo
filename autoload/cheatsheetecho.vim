@@ -115,18 +115,21 @@ def TabAlign(lines: list<string>): list<string>
     group += [line]
   endfor
   if !empty(group)
-    result += AlignGroup(group, max_len)
+    result->extend(AlignGroup(group, max_len))
   endif
 
   return result
 enddef
 # グループ内のテキストを整形する
 def AlignGroup(group: list<string>, max_len: number): list<string>
-    return group->mapnew((_, line) => {
-        if line !~ "\t" | return line | endif
-        var parts = split(line, "\t")
-        var padding = max_len - strdisplaywidth(parts[0]) + 2
-        return $'{parts[0]}{repeat(" ", padding)}{join(parts[1 : ], "\t")}'
-    })
+  return group->mapnew((_, line) => {
+    if line !~ "\t"
+      return line
+    endif
+
+    var parts = split(line, "\t")
+    var padding = max_len - strdisplaywidth(parts[0]) + 2
+    return $'{parts[0]}{repeat(" ", padding)}{join(parts[1 : ], "\t")}'
+  })
 enddef
 
