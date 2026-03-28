@@ -108,11 +108,11 @@ def TabAlign(lines: list<string>): list<string>
       var parts = split(line, '\t')
       max_len = max([max_len, strdisplaywidth(parts[0])])
     elseif max_len != 0
-      result += AlignGroup(group, max_len)
+      result->extend(AlignGroup(group, max_len))
       group = []
       max_len = 0
     endif
-    group += [line]
+    group->add(line)
   endfor
   if !empty(group)
     result->extend(AlignGroup(group, max_len))
