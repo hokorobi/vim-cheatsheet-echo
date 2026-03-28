@@ -10,6 +10,7 @@ scriptencoding utf-8
 #     },
 #     ...
 #   ]
+#   ...
 # }
 var tips_data: dict<list<dict<any>>> = {}
 
